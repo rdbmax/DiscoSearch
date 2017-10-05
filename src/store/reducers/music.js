@@ -1,13 +1,13 @@
 import { REQUEST_SEARCH, REQUEST_SEARCH_SUCCESS } from '../actions';
 
-const defaultState = {
+export const defaultMusicState = {
   query: '',
   songs: [],
   total: null,
   searching: false,
 };
 
-export default (state = defaultState, action) => {
+export default (state = defaultMusicState, action) => {
   switch (action.type) {
     case REQUEST_SEARCH:
       return {
