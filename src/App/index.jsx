@@ -1,29 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import withConnect from './withConnect';
-// import Sidebar from './Sidebar/index.jsx';
-// import Home from './Home/index.jsx';
-// import Education from './Education/index.jsx';
+import 'bubbly-bg/dist/bubbly-bg.js';
+import Header from './Header/index.jsx';
 
-const App = ({ hasSongs, requestSearch }) => (
-  <div>
-    test hasSongs { JSON.stringify(hasSongs) }
-    <button onClick={() => { requestSearch('sofiane') }}>click</button>
-    {/* <Sidebar />
-    <Choose>
-      <When condition={(page === 'HOME')}>
-        <Home />
-      </When>
-      <When condition={(page === 'EDUCATION')}>
-        <Education />
-      </When>
-    </Choose> */}
-  </div>
-);
+bubbly({
+  colorStart: '#4c004c',
+  colorStop: '#1a001a',
+  bubbleFunc: () => `hsla(${Math.random() * 360}, 100%, 50%, ${Math.random() * 0.25})`,
+});
 
-App.propTypes = {
-  hasSongs: PropTypes.bool.isRequired,
-  requestSearch: PropTypes.func.isRequired,
-};
+const App = () => [
+  <Header key='header' />,
+];
 
-export default withConnect(App);
+export default App;
