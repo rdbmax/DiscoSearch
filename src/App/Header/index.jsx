@@ -4,7 +4,6 @@ import Search from './Search/index.jsx';
 const CONTAINER_STYLE = {
   backgroundColor: 'rgba(0, 0, 0, 0.5)',
   padding: '10px',
-  position: 'relative',
 };
 
 const TITLE_STYLE = {
