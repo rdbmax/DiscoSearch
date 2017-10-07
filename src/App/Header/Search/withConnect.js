@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import { requestSearch } from 'store/actions';
-import { getHasSongs } from 'store/selectors';
+import { getHasSongs, getIsSearching } from 'store/selectors';
 
 const mapStateToProps = state => ({
-  hasSongs: getHasSongs(state),
+  centerElement: !getHasSongs(state) && !getIsSearching(state),
 });
 
 const mapDispatchToProps = { requestSearch };

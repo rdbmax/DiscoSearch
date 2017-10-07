@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import LoaderCircles from 'react-canvas-loaders/dist/loader-circles';
 import ReactTable from 'react-table';
@@ -18,6 +18,17 @@ const TABLE_STYLE = {
   color: 'white',
 };
 
+const LOADER_STYLE = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  borderRadius: '50%',
+  padding: '50px',
+  transform: 'translate(-50%, -50%)',
+  zIndex: '1',
+}
+
 const dataGridColumns = [{
   Header: 'Titre',
   accessor: 'title',
@@ -25,26 +36,58 @@ const dataGridColumns = [{
   Header: 'Artiste',
   accessor: d => d.artist.name,
   id: 'artistName',
+}, {
+  Header: 'Album',
+  accessor: d => d.album.title,
+  id: 'albumTitle',
 }];
 
-const Catalog = ({ isSearching, songs }) => (
-  <div style={CONTAINER_STYLE}>
-    <ReactTable
-      data={songs}
-      columns={dataGridColumns}
-      showPagination={false}
-      style={TABLE_STYLE}
-      NoDataComponent={() => null}
-    />
-    { isSearching && <LoaderCircles colorCircles='rgba(0, 0, 0, 0.2)' /> }
-  </div>
-);
+@withConnect
+class Catalog extends Component {
+  static propTypes = {
+    isSearching: PropTypes.bool.isRequired,
+    isFull: PropTypes.bool.isRequired,
+    songs: PropTypes.arrayOf(PropTypes.shape({
+      title: PropTypes.string,
+    })).isRequired,
+    totalSongs: PropTypes.number.isRequired,
+    fetchNextSongs: PropTypes.func.isRequired,
+  }
 
-Catalog.propTypes = {
-  isSearching: PropTypes.bool.isRequired,
-  songs: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string,
-  })).isRequired,
-};
+  componentDidMount() {
+    this.scrollableTable = document.querySelector('.rt-tbody');
+    this.scrollableTable.onscroll = this.onScroll;
+  }
 
-export default withConnect(Catalog);
+  onScroll = () => {
+    if (
+      this.scrollableTable.scrollHeight === this.scrollableTable.clientHeight + this.scrollableTable.scrollTop
+      && !this.props.isFull
+    ) {
+      this.props.fetchNextSongs();
+    }
+  }
+
+  render() {
+    const { isSearching, songs, totalSongs } = this.props;
+
+    return (
+      <div style={CONTAINER_STYLE}>
+        <ReactTable
+          data={songs}
+          columns={dataGridColumns}
+          showPagination={false}
+          pageSize={songs.length}
+          style={TABLE_STYLE}
+          NoDataComponent={() => null}
+        />
+        { isSearching &&
+          <div style={LOADER_STYLE}>
+            <LoaderCircles colorCircles='rgba(0, 0, 0, 0.2)' />
+          </div> }
+      </div>
+    );
+  }
+}
+
+export default Catalog;

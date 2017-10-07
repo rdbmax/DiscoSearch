@@ -1,19 +1,21 @@
-import { REQUEST_SEARCH, REQUEST_SEARCH_SUCCESS } from '../actions';
+import {
+  REQUEST_SEARCH, REQUEST_SEARCH_SUCCESS,
+  REQUEST_FETCH_NEXT_SONGS, REQUEST_FETCH_NEXT_SONGS_SUCCESS,
+} from '../actions';
 
 export const defaultMusicState = {
   query: '',
   songs: [],
-  total: null,
+  total: 0,
   searching: false,
+  next: null,
 };
 
 export default (state = defaultMusicState, action) => {
   switch (action.type) {
     case REQUEST_SEARCH:
       return {
-        ...state,
-        songs: [],
-        total: null,
+        ...defaultMusicState,
         query: action.payload.query,
         searching: true,
       };
@@ -23,6 +25,20 @@ export default (state = defaultMusicState, action) => {
         songs: action.payload.data,
         total: action.payload.total,
         searching: false,
+        next: action.payload.next,
+      };
+    case REQUEST_FETCH_NEXT_SONGS:
+      return {
+        ...state,
+        searching: true,
+      };
+    case REQUEST_FETCH_NEXT_SONGS_SUCCESS:
+      return {
+        ...state,
+        songs: [...state.songs, ...action.payload.data],
+        total: action.payload.total,
+        searching: false,
+        next: action.payload.next,
       };
     default:
       return state;
