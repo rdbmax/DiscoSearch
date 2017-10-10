@@ -50,7 +50,6 @@ class Catalog extends Component {
     songs: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string,
     })).isRequired,
-    totalSongs: PropTypes.number.isRequired,
     fetchNextSongs: PropTypes.func.isRequired,
   }
 
@@ -69,7 +68,7 @@ class Catalog extends Component {
   }
 
   render() {
-    const { isSearching, songs, totalSongs } = this.props;
+    const { isSearching, songs } = this.props;
 
     return (
       <div style={CONTAINER_STYLE}>
